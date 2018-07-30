@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from sklearn.linear_model import LinearRegression
+from sklearn.neighbors import KNeighborsRegressor
 import os 
 
 # current working directory
@@ -34,7 +35,7 @@ y = np.c_[country_stats["Life satisfaction"]]
 country_stats.plot(kind='scatter', x="GDP per capita", y="Life satisfaction")
 plt.show()
 
-# select a linear model
+# select a linear model (linear regression is MODEL-BASED LEARNING)
 model = LinearRegression()
 
 # train the model
@@ -43,11 +44,33 @@ model.fit(X, y)
 # make a prediction for cyprus
 X_new = [[22587]] # cyprus GDP per capita
 cyprus_life_satisfaction_prediction = model.predict(X_new)
+print("linear regression prediction for cyprus life satisfaction is: ", cyprus_life_satisfaction_prediction[0][0])
 
 # visualize the prediction
-#plt.hold(True)
 plt.subplot2grid((1, 1), (0, 0))
-plt.plot(X_new[0][0], cyprus_life_satisfaction_prediction[0][0], 'ro', label='cyprus')
+plt.plot(X_new[0][0], cyprus_life_satisfaction_prediction[0][0], 'ro', label='cyprus - linear regression')
+plt.scatter(X, y)
+plt.legend()
+plt.show()
+
+# NEW MODEL
+# ---------
+
+# now lets try k-Nearest Neighbors (INSTANCE-BASED LEARNING)
+model_2 = KNeighborsRegressor(n_neighbors=3)
+
+# train the model
+model_2.fit(X, y)
+
+# make a prediction for cyprus
+X_new = [[22587]] # cyprus GDP per capita
+cyprus_life_satisfaction_prediction_K_nearest_neighbors = model_2.predict(X_new)
+print("K nearest neighbors prediction for cyprus life satisfaction is: ", cyprus_life_satisfaction_prediction_K_nearest_neighbors[0][0])
+
+# visualize the new prediction
+plt.subplot2grid((1, 1), (0, 0))
+plt.plot(X_new[0][0], cyprus_life_satisfaction_prediction[0][0], 'ro', label='cyprus - linear regression')
+plt.plot(X_new[0][0], cyprus_life_satisfaction_prediction_K_nearest_neighbors[0][0], 'go', label='cyprus - k nearest neighbor')
 plt.scatter(X, y)
 plt.legend()
 plt.show()
